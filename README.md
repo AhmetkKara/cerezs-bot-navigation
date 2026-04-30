@@ -1,60 +1,44 @@
 # TurtleBot3 Haritalama ve Otonom Navigasyon Projesi
 
-Bu proje, TurtleBot3 robotunun simülasyon ortamında haritasının çıkarılması ve ardından bu harita üzerinde belirlenen noktalara otonom olarak gitmesi üzerine kurgulanmıştır.
+Bu ödev kapsamında, TurtleBot3 robotuyla Gazebo ortamında haritalama yapılmış ve bu harita kullanılarak belirlenen noktalara otonom gidiş senaryosu uygulanmıştır. Proje, hazır haritanın yüklenmesi ve hedeflere gidişi sağlayan Python kodunun çalıştırılması olmak üzere iki ana kısımdan oluşmaktadır.
 
 ---
 
-## Projeyi Hazırlarken Uygulanan Adımlar (Haritalama Aşaması)
+## Projenin Hazırlık Aşaması (Haritalama)
 
-Bu bölüm, projenin altyapısını oluşturmak için benim tarafımdan gerçekleştirilen SLAM adımlarını içerir. Sistemin çalışması için bu adımların tekrar edilmesine gerek yoktur.
+Aşağıdaki komutlar projenin temelini oluşturan haritayı (SLAM) çıkarmak için kullanılmıştır. Harita dosyaları klasörde mevcut olduğu için **bu kısmın tekrar çalıştırılmasına gerek yoktur.**
 
-### 1. Simülasyon ve SLAM Dünyası
-Öncelikle Gazebo dünyası ve haritalama (SLAM) düğümü başlatılmıştır:
-
+### Simülasyonun ve haritalamanın açılması:
 ```bash
 roslaunch turtlebot3_gazebo turtlebot3_world.launch
 roslaunch turtlebot3_slam turtlebot3_slam.launch slam_methods:=gmapping
 ```
 
-### 2. Manuel Haritalama
-Klavye kontrolü (teleop) kullanılarak robot simülasyon içerisinde gezdirilmiş ve çevre haritası oluşturulmuştur:
-
+### Robotun gezdirilip haritanın kaydedilmesi:
 ```bash
 roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
-```
-
-### 3. Haritanın Kaydedilmesi
-Oluşturulan harita, navigasyon aşamasında kullanılmak üzere kaydedilmiştir:
-
-```bash
 rosrun map_server map_saver -f cerezs_map
 ```
 
 ---
 
-## Proje Çalıştırma Adımları
+## Çalıştırma Talimatları
 
-Projeyi test etmek için indirilen klasörün içerisine girin, boş bir alana sağ tıklayarak **"Terminalde Aç" (Open in Terminal)** deyin ve aşağıdaki adımları sırayla 3 farklı terminalde uygulayın.
+Projeyi çalıştırmak için indirilen klasörün içine girip terminali orada açın (Open in Terminal). Ardından 3 ayrı terminalde şu adımları izleyin:
 
-### ADIM 1: Simülasyonun Başlatılması (1. Terminal)
-Gazebo simülasyon ortamını başlatmak için:
-
+### 1. Terminal: Simülasyon
 ```bash
 roslaunch turtlebot3_gazebo turtlebot3_world.launch
 ```
 
-### ADIM 2: Navigasyon ve Hazır Haritanın Yüklenmesi (2. Terminal)
-Kayıtlı haritayı yüklemek ve RViz arayüzünü açmak için yeni bir terminalde şunu çalıştırın:
-
+### 2. Terminal: Navigasyon ve Harita
 ```bash
 roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$(pwd)/cerezs_map.yaml
 ```
+**UYARI:** RViz açılınca üstteki "2D Pose Estimate" butonuyla robotun haritadaki yerini el ile gösterip hizalama yapmayı unutmayın.
 
-**ÖNEMLİ UYARI:** RViz açıldıktan sonra üst menüde bulunan **"2D Pose Estimate"** butonuna tıklayın. Robotun haritadaki gerçek konumunu ve yönünü farenizle işaretleyerek lazerlerin (yeşil noktalar) siyah duvar çizgilerine tam oturmasını sağlayın.
-
-### ADIM 3: Otonom Görevin Başlatılması (3. Terminal)
-Hizalama işlemi tamamlandıktan sonra robotu hedeflere göndermek için son terminalde python kodunu çalıştırın:
-
+### 3. Terminal: Otonom Kodun Çalıştırılması
+Hizalama bittikten sonra robotu harekete geçirmek için şu komutu girin:
 ```bash
 python3 cerezs_bot.py
 ```
